@@ -1,0 +1,14 @@
+# =============================================
+# robots.txt - CHERY MOBIL OFFICIAL
+# =============================================
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /includes/
+Disallow: /ajax/
+Disallow: /uploads/
+Disallow: /logs/
+Disallow: /?*
+
+Sitemap: http://localhost/car-dealer-website/sitemap.xml
