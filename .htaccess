@@ -1,0 +1,63 @@
+# =============================================
+# .htaccess - CHERY MOBIL OFFICIAL
+# =============================================
+
+# Enable Rewrite Engine
+RewriteEngine On
+
+# Force HTTPS (uncomment jika pakai SSL)
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+
+# Remove trailing slash
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)/$ /$1 [L,R=301]
+
+# Security: Block access to sensitive directories
+<FilesMatch "^(config|database|functions|session|auth)\.php$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Security: Block .env file
+<FilesMatch "^\.env">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Security: Disable directory browsing
+Options -Indexes
+
+# Security: Protect uploads directory
+<Directory "uploads">
+    Options -Indexes
+    <FilesMatch "\.(php|php5|php7|phtml)$">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+</Directory>
+
+# Security: X-Frame-Options
+Header always append X-Frame-Options "DENY"
+
+# Security: X-Content-Type-Options
+Header always set X-Content-Type-Options "nosniff"
+
+# Security: X-XSS-Protection
+Header always set X-XSS-Protection "1; mode=block"
+
+# Cache static assets
+<FilesMatch "\.(css|js|jpg|jpeg|png|gif|webp|svg|ico)$">
+    Header set Cache-Control "max-age=2592000, public"
+</FilesMatch>
+
+# Error pages
+ErrorDocument 404 /404.php
+ErrorDocument 403 /403.php
+ErrorDocument 500 /500.php
+
+# PHP Settings
+php_value upload_max_filesize 10M
+php_value post_max_size 10M
+php_value max_execution_time 300
+php_value memory_limit 256M
