@@ -1,6 +1,7 @@
 <?php
 // =============================================
 // SESSION MANAGEMENT
+// CHERY MOBIL OFFICIAL
 // =============================================
 
 // Start session if not started
@@ -37,9 +38,14 @@ if (!isset($_SESSION['ip_address'])) {
     session_destroy();
     session_start();
     session_regenerate_id(true);
+    $_SESSION['ip_address'] = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+    $_SESSION['user_agent'] = $_SERVER['HTTP_USER_AGENT'] ?? '';
 }
 
-// CSRF Token
+/**
+ * Get CSRF token
+ * @return string
+ */
 function getCsrfToken() {
     if (empty($_SESSION['csrf_token'])) {
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
@@ -47,7 +53,20 @@ function getCsrfToken() {
     return $_SESSION['csrf_token'];
 }
 
+/**
+ * Verify CSRF token
+ * @param string $token
+ * @return bool
+ */
 function verifyCsrfToken($token) {
     return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
+}
+
+/**
+ * Generate CSRF input field
+ * @return string
+ */
+function csrfField() {
+    return '<input type="hidden" name="csrf_token" value="' . getCsrfToken() . '">';
 }
 ?>
